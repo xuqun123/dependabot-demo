@@ -33,7 +33,6 @@ jobs:
         id: scanner
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          model: claude-opus-4-6
           prompt: |
             REPO: ${{ github.repository }}
 
@@ -117,7 +116,7 @@ jobs:
             - Any deferred items needing manual attention
 
           claude_args: |
-            --allowedTools "Read,Write,Edit,Bash(gh:*),Bash(git:*),Bash(npm:*),Bash(pip:*),Bash(find:*),Bash(cat:*),Bash(ls:*),Bash(grep:*),Bash(jq:*)"
+            --model claude-opus-4-6 --allowedTools "Read,Write,Edit,Bash(gh:*),Bash(git:*),Bash(npm:*),Bash(pip:*),Bash(find:*),Bash(cat:*),Bash(ls:*),Bash(grep:*),Bash(jq:*)"
 
       - name: Save scan cache
         if: always()
