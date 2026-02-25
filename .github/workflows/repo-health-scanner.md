@@ -5,6 +5,9 @@ description: >
 on:
   schedule: weekly
   workflow_dispatch:
+engine:
+  id: copilot
+  model: claude-opus-4-6
 permissions:
   contents: read
   issues: read
