@@ -1,0 +1,127 @@
+name: Repo Health Scanner (Claude Code Action)
+
+on:
+  schedule:
+    - cron: "33 8 * * 3" # Weekly on Wednesday (scattered time)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  security-events: read
+  id-token: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore scan cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: .repo-health-cache.json
+          key: repo-health-scanner-${{ github.repository }}-${{ github.run_id }}
+          restore-keys: |
+            repo-health-scanner-${{ github.repository }}-
+
+      - uses: anthropics/claude-code-action@v1
+        id: scanner
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-opus-4-6
+          prompt: |
+            REPO: ${{ github.repository }}
+
+            You are a repo health scanner. Perform a comprehensive health scan of this repository, then create focused PRs to resolve the most critical findings.
+
+            This workflow is designed to be generic and reusable across repositories. Do not assume a specific language, framework, or project structure. Dynamically detect the repository's technology stack, dependency files, and documentation conventions.
+
+            ## Scan Cache
+
+            Check if `.repo-health-cache.json` exists in the workspace root. If it does, read it to see what was scanned and fixed in previous runs. After completing the scan, write an updated `.repo-health-cache.json` with:
+            - Timestamp of this scan
+            - Summary of findings
+            - PRs created (titles and numbers)
+            - Items deferred for the next run
+
+            ## Step 1: Vulnerability Scan
+
+            - Run `gh api repos/${{ github.repository }}/dependabot/alerts --jq '.[] | select(.state=="open")' 2>/dev/null` to check for Dependabot alerts
+            - Run `gh api repos/${{ github.repository }}/code-scanning/alerts --jq '.[] | select(.state=="open")' 2>/dev/null` to check for code scanning alerts
+            - Check for known security anti-patterns in the codebase:
+              - Hardcoded secrets or credentials (API keys, passwords, tokens in source files)
+              - Outdated base images in Dockerfiles (check FROM lines for version pinning)
+              - Insecure configuration patterns
+            - If API calls fail due to permissions, note it and proceed.
+
+            ## Step 2: Dependency Health Check
+
+            Detect the project's dependency files dynamically. Look for:
+            - requirements.txt, pyproject.toml, setup.py, Pipfile (Python)
+            - package.json, yarn.lock, pnpm-lock.yaml (Node.js)
+            - go.mod (Go)
+            - Gemfile (Ruby)
+            - Cargo.toml (Rust)
+            - Dockerfile, docker-compose.yml (Docker base image versions)
+            - .github/dependabot.yml (Dependabot config completeness)
+
+            For each dependency file found:
+            - Check if dependency versions are pinned or use ranges
+            - Look for deprecated or end-of-life runtime versions
+            - Verify Dependabot is configured to monitor these ecosystems
+            - Flag any missing lock files
+
+            ## Step 3: Documentation Gap Analysis
+
+            Check for the existence and quality of essential documentation:
+            - Service overview: A top-level README.md or docs/ file explaining what the service does
+            - Getting started guide: How to set up the dev environment and run the service locally
+            - Testing guide: How to run tests, what frameworks are used, how to add new tests
+            - Deployment guide: How the service is deployed, what environments exist
+            - Contributing guide: CONTRIBUTING.md with code style, PR process, review expectations
+            - Architecture docs: High-level architecture diagrams or descriptions in docs/
+
+            Evaluate existing docs for staleness and check if they match the actual project structure.
+
+            ## Step 4: Take Action
+
+            Create focused, single-purpose PRs for the most impactful findings. Maximum 3 PRs per run.
+
+            1. **Vulnerability / Dependency PR**: Update pinned versions, fix Dependabot config gaps, update Dockerfile base images
+            2. **Documentation PR**: Add missing guide documents, update outdated references
+            3. **Configuration / Hygiene PR**: Add missing .gitignore entries, security scanning config
+
+            For each PR:
+            - Create a new branch named `repo-health/<short-description>`
+            - Make the changes and commit them
+            - Create the PR using `gh pr create` with title prefix `[repo-health]` and labels `automation,repo-health`
+            - Create as draft PR
+            - Write a clear PR description explaining what was found and fixed
+
+            If the repository is healthy with no actionable findings, create no PRs and just output a summary.
+
+            ## Step 5: Update Cache
+
+            Write the updated `.repo-health-cache.json` and commit it to the current branch.
+
+            ## Step 6: Output Summary
+
+            At the end, output a summary with:
+            - Number of findings per category (vulnerabilities, dependencies, docs)
+            - Links to any PRs created
+            - Any deferred items needing manual attention
+
+          claude_args: |
+            --allowedTools "Read,Write,Edit,Bash(gh:*),Bash(git:*),Bash(npm:*),Bash(pip:*),Bash(find:*),Bash(cat:*),Bash(ls:*),Bash(grep:*),Bash(jq:*)"
+
+      - name: Save scan cache
+        if: always()
+        run: |
+          if [ -f .repo-health-cache.json ]; then
+            echo "Cache file found, will be saved by actions/cache"
+          fi
