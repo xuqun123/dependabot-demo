@@ -14,8 +14,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: anthropics/claude-code-action@v1
-        env:
-          DEBUG_CLAUDE_AGENT_SDK: "true"
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          show_full_output: true
           prompt: "Say hello and list the files in the current directory. Keep your response under 50 words."
