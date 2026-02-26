@@ -50,87 +50,56 @@ jobs:
           prompt: |
             REPO: ${{ github.repository }}
 
-            You are a repo health scanner. Perform a comprehensive health scan of this repository, then create focused PRs to resolve the most critical findings.
-
-            This workflow is designed to be generic and reusable across repositories. Do not assume a specific language, framework, or project structure. Dynamically detect the repository's technology stack, dependency files, and documentation conventions.
+            You are a repo health scanner. Be efficient — minimize unnecessary tool calls and file reads.
 
             ## Scan Cache
 
-            Check if `.repo-health-cache.json` exists in the workspace root. If it does, read it to see what was scanned and fixed in previous runs. After completing the scan, write an updated `.repo-health-cache.json` with:
-            - Timestamp of this scan
-            - Summary of findings
-            - PRs created (titles and numbers)
-            - Items deferred for the next run
+            Read `.repo-health-cache.json` if it exists. Use it to:
+            - Skip issues that already have open PRs
+            - Avoid creating duplicate PRs for the same issue
+            After the scan, write an updated cache with: timestamp, findings summary, PRs created, deferred items.
 
-            ## Step 1: Vulnerability Scan
+            ## Step 1: Detect Tech Stack
 
-            - Run `gh api repos/${{ github.repository }}/dependabot/alerts --jq '.[] | select(.state=="open")' 2>/dev/null` to check for Dependabot alerts
-            - Run `gh api repos/${{ github.repository }}/code-scanning/alerts --jq '.[] | select(.state=="open")' 2>/dev/null` to check for code scanning alerts
-            - Check for known security anti-patterns in the codebase:
-              - Hardcoded secrets or credentials (API keys, passwords, tokens in source files)
-              - Outdated base images in Dockerfiles (check FROM lines for version pinning)
-              - Insecure configuration patterns
+            Run `find . -maxdepth 3 -type f \( -name "package.json" -o -name "requirements.txt" -o -name "pyproject.toml" -o -name "Gemfile" -o -name "go.mod" -o -name "Cargo.toml" -o -name "build.sbt" -o -name "pom.xml" -o -name "build.gradle*" -o -name "Dockerfile" -o -name "docker-compose.yml" -o -name "tsconfig.json" \) 2>/dev/null` to detect the tech stack. Only scan ecosystems that actually exist in this repo.
+
+            ## Step 2: Vulnerability Scan
+
+            - Run `gh api repos/${{ github.repository }}/dependabot/alerts --jq '.[] | select(.state=="open")' 2>/dev/null`
+            - Run `gh api repos/${{ github.repository }}/code-scanning/alerts --jq '.[] | select(.state=="open")' 2>/dev/null`
+            - Check for: hardcoded secrets, outdated Docker base images, insecure config patterns
             - If API calls fail due to permissions, note it and proceed.
 
-            ## Step 2: Dependency Health Check
+            ## Step 3: Dependency Health Check
 
-            Detect the project's dependency files dynamically. Look for:
-            - requirements.txt, pyproject.toml, setup.py, Pipfile (Python)
-            - package.json, yarn.lock, pnpm-lock.yaml (Node.js/TypeScript)
-            - tsconfig.json (TypeScript)
-            - go.mod (Go)
-            - Gemfile (Ruby)
-            - Cargo.toml (Rust)
-            - build.sbt, build.sc (Scala - sbt/Mill)
-            - pom.xml, build.gradle, build.gradle.kts (Java/Kotlin/Scala - Maven/Gradle)
-            - Dockerfile, docker-compose.yml (Docker base image versions)
-            - .github/dependabot.yml (Dependabot config completeness)
+            Only for ecosystems detected in Step 1:
+            - Check if versions are pinned or use ranges
+            - Look for deprecated or EOL runtime versions
+            - Verify Dependabot covers these ecosystems in `.github/dependabot.yml`
+            - Flag missing lock files
 
-            For each dependency file found:
-            - Check if dependency versions are pinned or use ranges
-            - Look for deprecated or end-of-life runtime versions
-            - Verify Dependabot is configured to monitor these ecosystems
-            - Flag any missing lock files
+            ## Step 4: Documentation Gap Analysis
 
-            ## Step 3: Documentation Gap Analysis
+            Check for: README.md, getting started guide, testing guide, deployment guide, CONTRIBUTING.md, architecture docs. Evaluate existing docs for staleness.
 
-            Check for the existence and quality of essential documentation:
-            - Service overview: A top-level README.md or docs/ file explaining what the service does
-            - Getting started guide: How to set up the dev environment and run the service locally
-            - Testing guide: How to run tests, what frameworks are used, how to add new tests
-            - Deployment guide: How the service is deployed, what environments exist
-            - Contributing guide: CONTRIBUTING.md with code style, PR process, review expectations
-            - Architecture docs: High-level architecture diagrams or descriptions in docs/
+            ## Step 5: Take Action
 
-            Evaluate existing docs for staleness and check if they match the actual project structure.
+            Check existing open PRs first: `gh pr list --label "repo-health" --state open --json title,number`. Do NOT create PRs for issues that already have open PRs.
 
-            ## Step 4: Take Action
-
-            Create focused, single-purpose PRs for the most impactful findings. Maximum 3 PRs per run.
-
-            1. **Vulnerability / Dependency PR**: Update pinned versions, fix Dependabot config gaps, update Dockerfile base images
-            2. **Documentation PR**: Add missing guide documents, update outdated references
-            3. **Configuration / Hygiene PR**: Add missing .gitignore entries, security scanning config
+            Create up to 3 focused draft PRs for NEW findings only:
+            1. **Vulnerability / Dependency PR**: Fix dependency issues, Dependabot config gaps, Docker base images
+            2. **Documentation PR**: Add missing docs, update outdated references
+            3. **Configuration / Hygiene PR**: .gitignore, security scanning config
 
             For each PR:
-            - Create a new branch named `repo-health/<short-description>`
-            - Make the changes and commit them
-            - Create the PR using `gh pr create` with title prefix `[repo-health]` and labels `automation,repo-health`
-            - Create as draft PR
-            - Write a clear PR description explaining what was found and fixed
+            - Branch: `repo-health/<short-description>`
+            - Create with: `gh pr create --draft --title "[repo-health] ..." --label "automation,repo-health"`
 
-            If the repository is healthy with no actionable findings, create no PRs and just output a summary.
+            If no new actionable findings, create no PRs.
 
-            ## Step 5: Update Cache
+            ## Step 6: Update Cache & Summary
 
-            Write the updated `.repo-health-cache.json` and commit it to the current branch.
-
-            ## Step 6: Output Summary
-
-            At the end, output a summary with:
-            - Number of findings per category (vulnerabilities, dependencies, docs)
-            - Links to any PRs created
-            - Any deferred items needing manual attention
+            Write `.repo-health-cache.json` and output a summary with: findings count per category, PR links, deferred items.
 
           claude_args: |
             --model claude-opus-4-6 --allowedTools "Read,Write,Edit,Bash(gh:*),Bash(git:*),Bash(npm:*),Bash(pip:*),Bash(find:*),Bash(cat:*),Bash(ls:*),Bash(grep:*),Bash(jq:*)"
