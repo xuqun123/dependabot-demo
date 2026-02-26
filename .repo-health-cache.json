@@ -1,0 +1,119 @@
+{
+  "last_scan": "2026-02-26T01:55:00Z",
+  "repository": "xuqun123/dependabot-demo",
+  "technology_stack": {
+    "languages": ["JavaScript", "Ruby"],
+    "ecosystems": ["npm", "bundler", "github-actions"],
+    "ci": "GitHub Actions"
+  },
+  "findings_summary": {
+    "vulnerabilities": {
+      "count": 1,
+      "details": [
+        {
+          "package": "hot-formula-parser",
+          "ecosystem": "npm",
+          "severity": "critical",
+          "cvss": 9.8,
+          "advisory": "GHSA-rc77-xxq6-4mff",
+          "status": "existing_pr",
+          "pr_numbers": [5, 8]
+        }
+      ]
+    },
+    "dependencies": {
+      "count": 4,
+      "details": [
+        {
+          "issue": "Outdated GitHub Actions in android.yml",
+          "description": "actions/checkout@v1 and actions/setup-java@v1 are severely outdated (current: v4). JDK 1.8 is EOL.",
+          "status": "deferred",
+          "reason": "GitHub token lacks 'workflows' permission to push .github/workflows changes"
+        },
+        {
+          "issue": "Dual lock files in javascript/",
+          "description": "Both package-lock.json and yarn.lock exist, which can cause version inconsistencies",
+          "status": "deferred",
+          "reason": "Intentional for demo purposes"
+        },
+        {
+          "issue": "Very old Ruby gems",
+          "description": "business 1.0.0 and uk_phone_numbers 0.1.0 are ancient",
+          "status": "deferred",
+          "reason": "Intentional for demo purposes - designed to show Dependabot updates"
+        },
+        {
+          "issue": "Outdated Bundler version",
+          "description": "Gemfile.lock bundled with 2.7.2",
+          "status": "deferred",
+          "reason": "Intentional for demo purposes"
+        }
+      ]
+    },
+    "documentation": {
+      "count": 2,
+      "details": [
+        {
+          "issue": "Missing SECURITY.md and LICENSE",
+          "status": "pr_created",
+          "pr_number": 14
+        },
+        {
+          "issue": "Missing CONTRIBUTING.md and docs/",
+          "status": "existing_pr",
+          "pr_number": 6
+        }
+      ]
+    },
+    "configuration": {
+      "count": 1,
+      "details": [
+        {
+          "issue": "Minimal .gitignore (only node_modules/)",
+          "status": "pr_created",
+          "pr_number": 15
+        }
+      ]
+    }
+  },
+  "prs_created": [
+    {
+      "number": 14,
+      "title": "[repo-health] Add SECURITY.md and LICENSE file",
+      "url": "https://github.com/xuqun123/dependabot-demo/pull/14",
+      "category": "documentation"
+    },
+    {
+      "number": 15,
+      "title": "[repo-health] Improve .gitignore for multi-ecosystem project",
+      "url": "https://github.com/xuqun123/dependabot-demo/pull/15",
+      "category": "configuration"
+    }
+  ],
+  "existing_open_prs": [
+    {
+      "number": 5,
+      "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser"
+    },
+    {
+      "number": 6,
+      "title": "[repo-health] Add comprehensive documentation for contributors"
+    },
+    {
+      "number": 8,
+      "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser"
+    }
+  ],
+  "deferred_items": [
+    {
+      "issue": "Outdated GitHub Actions in android.yml (checkout@v1, setup-java@v1, JDK 1.8)",
+      "reason": "Requires 'workflows' permission on GitHub token",
+      "priority": "high"
+    },
+    {
+      "issue": "Dual lock files in javascript/ (package-lock.json + yarn.lock)",
+      "reason": "Intentional for demo, but can cause version drift",
+      "priority": "low"
+    }
+  ]
+}
