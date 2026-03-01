@@ -1,5 +1,5 @@
 {
-  "last_scan": "2026-02-26T01:55:00Z",
+  "last_scan": "2026-03-01T22:10:00Z",
   "repository": "xuqun123/dependabot-demo",
   "technology_stack": {
     "languages": ["JavaScript", "Ruby"],
@@ -17,7 +17,8 @@
           "cvss": 9.8,
           "advisory": "GHSA-rc77-xxq6-4mff",
           "status": "existing_pr",
-          "pr_numbers": [5, 8]
+          "pr_numbers": [5, 8, 16],
+          "note": "3 duplicate PRs exist for the same vulnerability - manual cleanup recommended"
         }
       ]
     },
@@ -32,7 +33,7 @@
         },
         {
           "issue": "Dual lock files in javascript/",
-          "description": "Both package-lock.json and yarn.lock exist, which can cause version inconsistencies",
+          "description": "Both package-lock.json and yarn.lock exist. package-lock.json has hot-formula-parser@3.0.0, yarn.lock has @3.0.2 - version inconsistency",
           "status": "deferred",
           "reason": "Intentional for demo purposes"
         },
@@ -51,11 +52,16 @@
       ]
     },
     "documentation": {
-      "count": 2,
+      "count": 3,
       "details": [
         {
-          "issue": "Missing SECURITY.md and LICENSE",
+          "issue": "README.md typos ('Securty' and 'The enable')",
           "status": "pr_created",
+          "pr_number": 21
+        },
+        {
+          "issue": "Missing SECURITY.md and LICENSE",
+          "status": "existing_pr",
           "pr_number": 14
         },
         {
@@ -70,7 +76,7 @@
       "details": [
         {
           "issue": "Minimal .gitignore (only node_modules/)",
-          "status": "pr_created",
+          "status": "existing_pr",
           "pr_number": 15
         }
       ]
@@ -78,16 +84,10 @@
   },
   "prs_created": [
     {
-      "number": 14,
-      "title": "[repo-health] Add SECURITY.md and LICENSE file",
-      "url": "https://github.com/xuqun123/dependabot-demo/pull/14",
+      "number": 21,
+      "title": "[repo-health] Fix typos in README.md",
+      "url": "https://github.com/xuqun123/dependabot-demo/pull/21",
       "category": "documentation"
-    },
-    {
-      "number": 15,
-      "title": "[repo-health] Improve .gitignore for multi-ecosystem project",
-      "url": "https://github.com/xuqun123/dependabot-demo/pull/15",
-      "category": "configuration"
     }
   ],
   "existing_open_prs": [
@@ -102,6 +102,18 @@
     {
       "number": 8,
       "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser"
+    },
+    {
+      "number": 14,
+      "title": "[repo-health] Add SECURITY.md and LICENSE file"
+    },
+    {
+      "number": 15,
+      "title": "[repo-health] Improve .gitignore for multi-ecosystem project"
+    },
+    {
+      "number": 16,
+      "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser"
     }
   ],
   "deferred_items": [
@@ -111,8 +123,13 @@
       "priority": "high"
     },
     {
-      "issue": "Dual lock files in javascript/ (package-lock.json + yarn.lock)",
-      "reason": "Intentional for demo, but can cause version drift",
+      "issue": "Duplicate vulnerability PRs (#5, #8, #16) for hot-formula-parser - should close stale ones",
+      "reason": "Manual cleanup recommended; auto-close workflow should handle PRs idle > 14 days",
+      "priority": "medium"
+    },
+    {
+      "issue": "Dual lock files in javascript/ (package-lock.json + yarn.lock) with version inconsistency",
+      "reason": "Intentional for demo, but package-lock has hot-formula-parser@3.0.0 while yarn.lock has @3.0.2",
       "priority": "low"
     }
   ]
