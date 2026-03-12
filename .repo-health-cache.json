@@ -1,5 +1,5 @@
 {
-  "last_scan": "2026-03-08T22:10:00Z",
+  "last_scan": "2026-03-12T12:27:03Z",
   "repository": "xuqun123/dependabot-demo",
   "technology_stack": {
     "languages": ["JavaScript", "Ruby"],
@@ -18,44 +18,38 @@
           "advisory": "GHSA-rc77-xxq6-4mff",
           "status": "existing_pr",
           "pr_numbers": [5, 8, 16],
-          "note": "3 duplicate PRs exist for the same vulnerability - manual cleanup recommended (close #5 and #8, keep #16)"
+          "note": "3 duplicate PRs exist (#5, #8, #16). Manual cleanup recommended: close #5 and #8, keep #16."
         }
       ]
     },
     "dependencies": {
-      "count": 4,
+      "count": 3,
       "details": [
         {
           "issue": "Outdated GitHub Actions in android.yml",
-          "description": "actions/checkout@v1 and actions/setup-java@v1 are severely outdated (current: v4). JDK 1.8 is EOL.",
+          "description": "actions/checkout@v1 (current: v4), actions/setup-java@v1 (current: v4), JDK 1.8 (EOL, should be 17+). Also missing explicit permissions block.",
           "status": "deferred",
-          "reason": "GitHub token lacks 'workflows' permission to push .github/workflows changes"
+          "reason": "Workflow lacks 'workflows' permission scope to push changes to .github/workflows/"
         },
         {
           "issue": "Dual lock files in javascript/",
-          "description": "Both package-lock.json and yarn.lock exist. package-lock.json has hot-formula-parser@3.0.0, yarn.lock has @3.0.2 - version inconsistency",
+          "description": "Both package-lock.json and yarn.lock exist with version inconsistency (hot-formula-parser@3.0.0 vs @3.0.2)",
           "status": "deferred",
           "reason": "Intentional for demo purposes"
         },
         {
           "issue": "Very old Ruby gems",
-          "description": "business 1.0.0 and uk_phone_numbers 0.1.0 are ancient",
+          "description": "business 1.0.0 and uk_phone_numbers 0.1.0 are ancient; Bundled with 2.7.2",
           "status": "deferred",
           "reason": "Intentional for demo purposes - designed to show Dependabot updates"
-        },
-        {
-          "issue": "Outdated Bundler version",
-          "description": "Gemfile.lock bundled with 2.7.2",
-          "status": "deferred",
-          "reason": "Intentional for demo purposes"
         }
       ]
     },
     "documentation": {
-      "count": 3,
+      "count": 4,
       "details": [
         {
-          "issue": "README.md typos ('Securty' on line 24 and 'The enable' on line 30)",
+          "issue": "README.md typos",
           "status": "existing_pr",
           "pr_number": 21
         },
@@ -75,7 +69,7 @@
       "count": 1,
       "details": [
         {
-          "issue": "Minimal .gitignore (only node_modules/)",
+          "issue": "Minimal .gitignore",
           "status": "existing_pr",
           "pr_number": 15
         }
@@ -83,50 +77,6 @@
     }
   },
   "prs_created_this_run": [],
-  "prs_created_all_time": [
-    {
-      "number": 5,
-      "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser",
-      "category": "vulnerability",
-      "created_scan": "2026-02-26"
-    },
-    {
-      "number": 6,
-      "title": "[repo-health] Add comprehensive documentation for contributors",
-      "category": "documentation",
-      "created_scan": "2026-02-26"
-    },
-    {
-      "number": 8,
-      "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser",
-      "category": "vulnerability",
-      "created_scan": "2026-02-26"
-    },
-    {
-      "number": 14,
-      "title": "[repo-health] Add SECURITY.md and LICENSE file",
-      "category": "documentation",
-      "created_scan": "2026-02-26"
-    },
-    {
-      "number": 15,
-      "title": "[repo-health] Improve .gitignore for multi-ecosystem project",
-      "category": "configuration",
-      "created_scan": "2026-02-26"
-    },
-    {
-      "number": 16,
-      "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser",
-      "category": "vulnerability",
-      "created_scan": "2026-02-26"
-    },
-    {
-      "number": 21,
-      "title": "[repo-health] Fix typos in README.md",
-      "category": "documentation",
-      "created_scan": "2026-03-01"
-    }
-  ],
   "existing_open_prs": [
     {"number": 5, "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser", "status": "open"},
     {"number": 6, "title": "[repo-health] Add comprehensive documentation for contributors", "status": "open"},
@@ -138,8 +88,8 @@
   ],
   "deferred_items": [
     {
-      "issue": "Outdated GitHub Actions in android.yml (checkout@v1, setup-java@v1, JDK 1.8)",
-      "reason": "Requires 'workflows' permission on GitHub token",
+      "issue": "Outdated GitHub Actions in android.yml (checkout@v1, setup-java@v1, JDK 1.8 EOL, missing permissions block)",
+      "reason": "Requires 'workflows' permission scope on GitHub token - not available in current workflow config",
       "priority": "high"
     },
     {
@@ -149,7 +99,7 @@
     },
     {
       "issue": "Dual lock files in javascript/ (package-lock.json + yarn.lock) with version inconsistency",
-      "reason": "Intentional for demo, but package-lock has hot-formula-parser@3.0.0 while yarn.lock has @3.0.2",
+      "reason": "Intentional for demo purposes",
       "priority": "low"
     }
   ]
