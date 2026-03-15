@@ -1,5 +1,5 @@
 {
-  "last_scan": "2026-03-08T22:10:00Z",
+  "last_scan": "2026-03-15T22:10:00Z",
   "repository": "xuqun123/dependabot-demo",
   "technology_stack": {
     "languages": ["JavaScript", "Ruby"],
@@ -16,9 +16,8 @@
           "severity": "critical",
           "cvss": 9.8,
           "advisory": "GHSA-rc77-xxq6-4mff",
-          "status": "existing_pr",
-          "pr_numbers": [5, 8, 16],
-          "note": "3 duplicate PRs exist for the same vulnerability - manual cleanup recommended (close #5 and #8, keep #16)"
+          "status": "deferred",
+          "note": "Prior fix PRs (#5, #8, #16) were auto-closed as stale. Vulnerability is intentional for this demo repo."
         }
       ]
     },
@@ -33,7 +32,7 @@
         },
         {
           "issue": "Dual lock files in javascript/",
-          "description": "Both package-lock.json and yarn.lock exist. package-lock.json has hot-formula-parser@3.0.0, yarn.lock has @3.0.2 - version inconsistency",
+          "description": "Both package-lock.json and yarn.lock exist with version inconsistency for hot-formula-parser",
           "status": "deferred",
           "reason": "Intentional for demo purposes"
         },
@@ -61,13 +60,14 @@
         },
         {
           "issue": "Missing SECURITY.md and LICENSE",
-          "status": "existing_pr",
-          "pr_number": 14
+          "status": "new_pr",
+          "pr_number": 38,
+          "note": "Re-created after prior PR #14 was auto-closed as stale"
         },
         {
           "issue": "Missing CONTRIBUTING.md and docs/",
-          "status": "existing_pr",
-          "pr_number": 6
+          "status": "deferred",
+          "note": "Prior PR #6 was auto-closed as stale. Deferred to avoid PR overload."
         }
       ]
     },
@@ -76,65 +76,97 @@
       "details": [
         {
           "issue": "Minimal .gitignore (only node_modules/)",
-          "status": "existing_pr",
-          "pr_number": 15
+          "status": "new_pr",
+          "pr_number": 39,
+          "note": "Re-created after prior PR #15 was auto-closed as stale"
         }
       ]
     }
   },
-  "prs_created_this_run": [],
+  "prs_created_this_run": [
+    {
+      "number": 38,
+      "title": "[repo-health] Add SECURITY.md and LICENSE file",
+      "category": "documentation",
+      "created_scan": "2026-03-15"
+    },
+    {
+      "number": 39,
+      "title": "[repo-health] Improve .gitignore for multi-ecosystem project",
+      "category": "configuration",
+      "created_scan": "2026-03-15"
+    }
+  ],
   "prs_created_all_time": [
     {
       "number": 5,
       "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser",
       "category": "vulnerability",
-      "created_scan": "2026-02-26"
+      "created_scan": "2026-02-26",
+      "status": "auto-closed"
     },
     {
       "number": 6,
       "title": "[repo-health] Add comprehensive documentation for contributors",
       "category": "documentation",
-      "created_scan": "2026-02-26"
+      "created_scan": "2026-02-26",
+      "status": "auto-closed"
     },
     {
       "number": 8,
       "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser",
       "category": "vulnerability",
-      "created_scan": "2026-02-26"
+      "created_scan": "2026-02-26",
+      "status": "auto-closed"
     },
     {
       "number": 14,
       "title": "[repo-health] Add SECURITY.md and LICENSE file",
       "category": "documentation",
-      "created_scan": "2026-02-26"
+      "created_scan": "2026-02-26",
+      "status": "auto-closed"
     },
     {
       "number": 15,
       "title": "[repo-health] Improve .gitignore for multi-ecosystem project",
       "category": "configuration",
-      "created_scan": "2026-02-26"
+      "created_scan": "2026-02-26",
+      "status": "auto-closed"
     },
     {
       "number": 16,
       "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser",
       "category": "vulnerability",
-      "created_scan": "2026-02-26"
+      "created_scan": "2026-02-26",
+      "status": "auto-closed"
     },
     {
       "number": 21,
       "title": "[repo-health] Fix typos in README.md",
       "category": "documentation",
-      "created_scan": "2026-03-01"
+      "created_scan": "2026-03-01",
+      "status": "open"
+    },
+    {
+      "number": 38,
+      "title": "[repo-health] Add SECURITY.md and LICENSE file",
+      "category": "documentation",
+      "created_scan": "2026-03-15",
+      "status": "open"
+    },
+    {
+      "number": 39,
+      "title": "[repo-health] Improve .gitignore for multi-ecosystem project",
+      "category": "configuration",
+      "created_scan": "2026-03-15",
+      "status": "open"
     }
   ],
   "existing_open_prs": [
-    {"number": 5, "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser", "status": "open"},
-    {"number": 6, "title": "[repo-health] Add comprehensive documentation for contributors", "status": "open"},
-    {"number": 8, "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser", "status": "open"},
-    {"number": 14, "title": "[repo-health] Add SECURITY.md and LICENSE file", "status": "open/draft"},
-    {"number": 15, "title": "[repo-health] Improve .gitignore for multi-ecosystem project", "status": "open/draft"},
-    {"number": 16, "title": "[repo-health] Fix critical command injection vulnerability in hot-formula-parser", "status": "open"},
-    {"number": 21, "title": "[repo-health] Fix typos in README.md", "status": "open/draft"}
+    {"number": 21, "title": "[repo-health] Fix typos in README.md", "status": "open/draft"},
+    {"number": 33, "title": "[repo-health] Update repo health scan cache (2026-03-12)", "status": "open/draft"},
+    {"number": 38, "title": "[repo-health] Add SECURITY.md and LICENSE file", "status": "open/draft"},
+    {"number": 39, "title": "[repo-health] Improve .gitignore for multi-ecosystem project", "status": "open/draft"}
   ],
   "deferred_items": [
     {
@@ -143,13 +175,18 @@
       "priority": "high"
     },
     {
-      "issue": "Duplicate vulnerability PRs (#5, #8, #16) for hot-formula-parser - close #5 and #8, keep #16",
-      "reason": "Manual cleanup recommended by repo maintainer",
+      "issue": "hot-formula-parser critical vulnerability (GHSA-rc77-xxq6-4mff)",
+      "reason": "Intentional for demo repo - prior fix PRs were auto-closed",
       "priority": "medium"
     },
     {
-      "issue": "Dual lock files in javascript/ (package-lock.json + yarn.lock) with version inconsistency",
-      "reason": "Intentional for demo, but package-lock has hot-formula-parser@3.0.0 while yarn.lock has @3.0.2",
+      "issue": "Missing CONTRIBUTING.md and docs/",
+      "reason": "Deferred to next run to avoid PR overload",
+      "priority": "medium"
+    },
+    {
+      "issue": "Dual lock files in javascript/ with version inconsistency",
+      "reason": "Intentional for demo purposes",
       "priority": "low"
     }
   ]
