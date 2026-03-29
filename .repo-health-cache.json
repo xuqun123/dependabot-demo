@@ -1,5 +1,5 @@
 {
-  "last_scan": "2026-03-22T22:10:00Z",
+  "last_scan": "2026-03-29T22:10:00Z",
   "repository": "xuqun123/dependabot-demo",
   "technology_stack": {
     "languages": ["JavaScript", "Ruby"],
@@ -55,21 +55,21 @@
       "details": [
         {
           "issue": "README.md typos ('Securty' on line 24 and 'The enable' on line 30)",
-          "status": "new_pr",
+          "status": "existing_pr",
           "pr_number": 48,
-          "note": "Re-created after prior PR #21 was closed"
+          "note": "Open draft PR since 2026-03-22"
         },
         {
           "issue": "Missing SECURITY.md and LICENSE",
           "status": "existing_pr",
           "pr_number": 38,
-          "note": "Re-created after prior PR #14 was auto-closed as stale"
+          "note": "Open draft PR since 2026-03-15"
         },
         {
           "issue": "Missing CONTRIBUTING.md and docs/",
           "status": "existing_pr",
           "pr_number": 43,
-          "note": "Re-created after prior PR #6 was auto-closed as stale"
+          "note": "Open draft PR since 2026-03-15"
         }
       ]
     },
@@ -80,19 +80,12 @@
           "issue": "Minimal .gitignore (only node_modules/)",
           "status": "existing_pr",
           "pr_number": 39,
-          "note": "Re-created after prior PR #15 was auto-closed as stale"
+          "note": "Open draft PR since 2026-03-15"
         }
       ]
     }
   },
-  "prs_created_this_run": [
-    {
-      "number": 48,
-      "title": "[repo-health] Fix typos in README.md",
-      "category": "documentation",
-      "created_scan": "2026-03-22"
-    }
-  ],
+  "prs_created_this_run": [],
   "prs_created_all_time": [
     {
       "number": 5,
@@ -148,7 +141,7 @@
       "title": "[repo-health] Update repo health scan cache (2026-03-12)",
       "category": "cache-update",
       "created_scan": "2026-03-08",
-      "status": "open"
+      "status": "closed"
     },
     {
       "number": 38,
@@ -180,7 +173,6 @@
     }
   ],
   "existing_open_prs": [
-    {"number": 33, "title": "[repo-health] Update repo health scan cache (2026-03-12)", "status": "open/draft"},
     {"number": 38, "title": "[repo-health] Add SECURITY.md and LICENSE file", "status": "open/draft"},
     {"number": 39, "title": "[repo-health] Improve .gitignore for multi-ecosystem project", "status": "open/draft"},
     {"number": 43, "title": "[repo-health] Add CONTRIBUTING.md and docs/how-this-service-works.md", "status": "open/draft"},
