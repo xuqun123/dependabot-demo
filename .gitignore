@@ -1,1 +1,26 @@
+# Dependencies
 node_modules/
+
+# Ruby
+ruby/.bundle/
+ruby/vendor/bundle/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+*.log
+tmp/
